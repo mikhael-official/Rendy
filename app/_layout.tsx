@@ -1,29 +1,88 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Slot } from 'expo-router';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { MotiView } from 'moti';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function Layout() {
+	  const [isReady, setIsReady] = useState(false);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+	    useEffect(() => {
+	    	    const init = async () => {
+	    	    	      // Simula carregamento de dados iniciais (IA, tokens, configs, etc)
+	    	    	            await new Promise(resolve => setTimeout(resolve, 1500));
+	    	    	                  setIsReady(true);
+	    	    	                      };
+	    	    	                          init();
+	    	    	                            }, []);
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+	    	    	                              if (!isReady) {
+	    	    	                              	    return (
+	    	    	                              	    	      <View style={styles.loadingContainer}>
+	    	    	                              	    	              <Text style={styles.loadingText}>Carregando o Rendy...</Text>
+	    	    	                              	    	                      <ActivityIndicator size="large" color="#0ff" />
+	    	    	                              	    	                            </View>
+	    	    	                              	    	                                );
+	    	    	                              	    	                                  }
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+	    	    	                              	    	                                    return (
+	    	    	                              	    	                                    	    <SafeAreaProvider>
+	    	    	                              	    	                                    	          <View style={styles.container}>
+	    	    	                              	    	                                    	                  <MotiView
+	    	    	                              	    	                                    	                            from={{ opacity: 0, translateY: -20 }}
+	    	    	                              	    	                                    	                                      animate={{ opacity: 1, translateY: 0 }}
+	    	    	                              	    	                                    	                                                transition={{ type: 'timing', duration: 800 }}
+	    	    	                              	    	                                    	                                                        >
+	    	    	                              	    	                                    	                                                                  <Text style={styles.title}>Bem-vindo ao Rendy!</Text>
+	    	    	                              	    	                                    	                                                                            <Text style={styles.subtitle}>Seu app inteligente, seguro e inovador</Text>
+	    	    	                              	    	                                    	                                                                                    </MotiView>
+	    	    	                              	    	                                    	                                                                                          </View>
+	    	    	                              	    	                                    	                                                                                                <Slot />
+	    	    	                              	    	                                    	                                                                                                    </SafeAreaProvider>
+	    	    	                              	    	                                    	                                                                                                      );
+	    	    	                              	    	                                    	                                                                                                      }
+
+	    	    	                              	    	                                    	                                                                                                      const styles = StyleSheet.create({
+	    	    	                              	    	                                    	                                                                                                      	  loadingContainer: {
+	    	    	                              	    	                                    	                                                                                                      	  	    flex: 1,
+	    	    	                              	    	                                    	                                                                                                      	  	        backgroundColor: '#000',
+	    	    	                              	    	                                    	                                                                                                      	  	            justifyContent: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                alignItems: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                  },
+	    	    	                              	    	                                    	                                                                                                      	  	                    loadingText: {
+	    	    	                              	    	                                    	                                                                                                      	  	                    	    color: '#0ff',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	        fontSize: 18,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	            fontWeight: 'bold',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                marginBottom: 20,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                  },
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    container: {
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	    backgroundColor: '#000',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	        alignItems: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	            justifyContent: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                padding: 20,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                  },
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    title: {
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	    fontSize: 26,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	        color: '#0ff',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	            fontWeight: 'bold',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                textAlign: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                    marginBottom: 10,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                      },
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        subtitle: {
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        	    fontSize: 16,
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        	        color: '#aaa',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        	            textAlign: 'center',
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        	              },
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        	              });
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    	                        }
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    	                    }
+	    	    	                              	    	                                    	                                                                                                      	  	                    	                    }
+	    	    	                              	    	                                    	                                                                                                      	  	                    }
+	    	    	                              	    	                                    	                                                                                                      	  }
+	    	    	                              	    	                                    	                                                                                                      })
+	    	    	                              	    	                                    )
+	    	    	                              	    )
+	    	    	                              }
+	    	    }
+	    })
 }
