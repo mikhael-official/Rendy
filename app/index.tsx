@@ -1,28 +1,23 @@
-import { useEffect, useState } from 'react';
+// app/index.tsx
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MotiView } from 'moti';
+import { Activity } from 'lucide-react-native';
 
-export default function Index() {
-  const [isReady, setIsReady] = useState(false);
+// SplashScreen animada com Moti
+function SplashScreen() {
+  return (
+    <View style={styles.loadingContainer}>
+      <Text style={styles.loadingText}>Carregando o Rendy...</Text>
+      <ActivityIndicator size="large" color="#0ff" />
+    </View>
+  );
+}
 
-  useEffect(() => {
-    const init = async () => {
-      // Simula carregamento de dados iniciais (IA, tokens, configs, etc)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      setIsReady(true);
-    };
-    init();
-  }, []);
-
-  if (!isReady) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>Carregando o Rendy...</Text>
-        <ActivityIndicator size="large" color="#0ff" />
-      </View>
-    );
-  }
-
+// Tela de boas-vindas animada
+function WelcomeScreen() {
   return (
     <View style={styles.container}>
       <MotiView
@@ -37,6 +32,57 @@ export default function Index() {
   );
 }
 
+// Aba de exemplo com ícone
+function IconExample() {
+  return (
+    <View style={{ padding: 20 }}>
+      <Activity color="black" size={32} />
+    </View>
+  );
+}
+
+function HomeScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <IconExample />
+    </View>
+  );
+}
+
+// Navegação por abas
+const Tab = createBottomTabNavigator();
+
+function Tabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Início" component={HomeScreen} />
+      <Tab.Screen name="Boas-vindas" component={WelcomeScreen} />
+    </Tab.Navigator>
+  );
+}
+
+// App principal com tela de carregamento inicial
+export default function App() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setIsReady(true);
+    };
+    init();
+  }, []);
+
+  if (!isReady) return <SplashScreen />;
+
+  return (
+    <NavigationContainer>
+      <Tabs />
+    </NavigationContainer>
+  );
+}
+
+// Estilos
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
